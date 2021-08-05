@@ -6,7 +6,9 @@
     <body style="margin:0 0 0 0;">
         <script>
 
-            const __VERSION__ = "0.0.1 (ver/dev)"
+            const __VERSION__ = "0.0.1 (builds/dev)";
+            const __AUTHOR__ = "Zycras";
+            const __MAPSIZE__ = 10;
 
             let CANVAS;
             let STATE = 0;
@@ -39,7 +41,44 @@
 
             class UI
             {
-                constructor(title="Kitten Tower Defense",version=__VERSION__)
+                constructor(title="Kitten Tower Defense")
+                {
+                    this.title = title;
+                }
+
+                drawGameUI()
+                {
+                    push();
+                    fill(0);
+                    stroke(50);
+                    strokeWeight(10)
+                    rect(0,0,width,height/12,10);
+                    fill(255);
+                    noStroke();
+                    textAlign(CENTER,CENTER);
+                    textSize(width/35)
+                    text(this.title + " Version: " + __VERSION__ + " Developed By: " + __AUTHOR__,width/2,height/24);
+                    pop();
+                }
+            }
+
+            const GRASS = 0;
+            const PATH = 1;
+
+            const tileFill = [[50,150,75],("#705535")]
+
+            function drawTile(type,x,y)
+            {
+                x += 0.5;
+                y += 0.5;
+                // Size For Tiles (Always Sqaure)
+                let r = ((width+height)/2)/__MAPSIZE__/2;
+                push();
+                stroke(0);
+                fill(tileFill[type]);
+                rectMode(CENTER);
+                rect(width/2 + r*x, height/2+r*y,r,r);
+                pop();
             }
 
             class Level1
@@ -48,19 +87,45 @@
                 {
                     this.coins = coins;
                     this.round = 0;
+                    this.mapArray = [
+                        [0,0,0,0,0,0,0,0,0,0],
+                        [0,0,0,1,1,1,0,0,0,0],
+                        [0,0,0,1,0,1,0,0,0,0],
+                        [1,1,1,1,0,1,0,0,0,0],
+                        [0,0,0,0,0,1,0,0,0,0],
+                        [0,0,0,1,1,1,0,0,0,0],
+                        [0,0,0,1,0,0,0,0,0,0],
+                        [0,0,0,1,0,0,0,0,0,0],
+                        [0,0,0,1,1,1,1,1,1,1],
+                        [0,0,0,0,0,0,0,0,0,0]
+                    ];
                 }
 
                 draw(mouseClick=true,ui=null)
                 {
                     if (mouseClick) {return;}
                     background(0);
+                    for (let x = -__MAPSIZE__/2; x<__MAPSIZE__/2; x++)
+                    {
+                        for (let y=-__MAPSIZE__/2; y<__MAPSIZE__/2; y++)
+                        {
+                            drawTile(this.mapArray[y+5][x+5],x,y);
+                        }
+                    }
                     ui.drawGameUI();
                 }
             }
 
-            let LVL1 = new Level1(0);
+            let Level = 1;
+
+            function GameDraw(mouseClick=true,ui=null)
+            {
+                if (Level==1){LVL1.draw(mouseClick,ui);}
+            }
+
+            let LVL1 = new Level1();
             let ui = new UI();
-            loadOrder = [Title,LVL1.draw,function(e){}];
+            loadOrder = [Title,GameDraw,function(e){}];
             
             function setup()
             {
