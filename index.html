@@ -1,0 +1,86 @@
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js" integrity="sha512-w1Bktzax55ZbjW5Mqjz8+mKz4KqRjEUU35Dpq/ath29yskKqIGwNIHiFNp03m/OiJWDXvdQ1/g6aV+l4PeVO7Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <title> Kitten Tower Defense </title>
+    </head>
+    <body style="margin:0 0 0 0;">
+        <script>
+
+            const __VERSION__ = "0.0.1 (ver/dev)"
+
+            let CANVAS;
+            let STATE = 0;
+            let loadOrder;
+            
+
+
+            function changeState(state)
+            {
+                
+                STATE = state;
+            }
+
+            function Title(event=true)
+            {
+                push();
+                fill(255);
+                noStroke();
+                textAlign(CENTER,CENTER);
+                textSize(width/10)
+                text("Kitten Tower Defense",width/2,height/3);
+                textSize(width/20)
+                text("Play!",width/2,height/3*2);
+                pop();
+                if (event)
+                {
+                    STATE++;
+                }
+            }
+
+            class UI
+            {
+                constructor(title="Kitten Tower Defense",version=__VERSION__)
+            }
+
+            class Level1
+            {
+                constructor(coins=0)
+                {
+                    this.coins = coins;
+                    this.round = 0;
+                }
+
+                draw(mouseClick=true,ui=null)
+                {
+                    if (mouseClick) {return;}
+                    background(0);
+                    ui.drawGameUI();
+                }
+            }
+
+            let LVL1 = new Level1(0);
+            let ui = new UI();
+            loadOrder = [Title,LVL1.draw,function(e){}];
+            
+            function setup()
+            {
+                CANVAS = createCanvas(windowWidth,windowHeight);
+                CANVAS.mouseClicked(function(){
+                    loadOrder[STATE]();
+                });
+                changeState(0);
+            }
+
+            function draw()
+            {
+                background(0);
+                loadOrder[STATE](false,ui);
+            }
+
+            function windowResized()
+            {
+                resizeCanvas(windowWidth,windowHeight);
+            }
+        </script>
+    </body>
+</html>
