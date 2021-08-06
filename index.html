@@ -119,8 +119,7 @@
                     textAlign(CENTER,CENTER);
                     textSize(width/35)
                     frameAverage += deltaTime/1;
-                    frameAverage /= 2;
-                    text(frameAverage,width/2,height/2);
+                    text(frameAverage/frameCount,width/2,height/2);
                     pop();
                     
                 }
