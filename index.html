@@ -118,8 +118,8 @@
                     noStroke();
                     textAlign(CENTER,CENTER);
                     textSize(width/35)
-                    frameAverage += deltaTime/1;
-                    text(frameAverage/frameCount,width/2,height/2);
+                    frameAverage += 1/(deltaTime*0.001);
+                    text(Math.round(frameAverage/frameCount),width/2,height/2);
                     pop();
                     
                 }
