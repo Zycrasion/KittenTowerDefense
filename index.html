@@ -1,90 +1,26 @@
 <html>
     <head>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js" integrity="sha512-w1Bktzax55ZbjW5Mqjz8+mKz4KqRjEUU35Dpq/ath29yskKqIGwNIHiFNp03m/OiJWDXvdQ1/g6aV+l4PeVO7Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="SETTINGS.js"></script>
+        <script src="UI.js"></script>
+        <script src="LEVELS.js"></script>
+        <script src="TILES.js"></script>
         <title> Kitten Tower Defense </title>
     </head>
     <body style="margin:0 0 0 0;">
         <script>
-
-            const __VERSION__ = "0.0.1 (builds/dev)";
-            const __AUTHOR__ = "Zycras";
-            const __MAPSIZE__ = 10;
-            const __UISCALE__ = 100;
             let frameAverage = 0;
-            
-
-            function uiScaleDivWidth()
-            {
-                return width/__UISCALE__;
-            }
-
-            function uiScaleDivHeight()
-            {
-                return height/__UISCALE__;
-            }
-
             let CANVAS;
             let STATE = 0;
             let loadOrder;
-            
 
-
-            function changeState(state)
+            // Wrapper Code
+            function GameDraw(mouseClick=true,ui=null)
             {
-                
-                STATE = state;
+                if (Level==1){LVL1.draw(mouseClick,ui);}
             }
 
-            class UIText
-            {
-                constructor(x,y,t,fS)
-                {
-                    this.pos = createVector(x,y);
-                    this.fontSize = fS;
-                    this.t = t;
-                }
-
-                draw()
-                {
-                    let sW = uiScaleDivWidth();
-                    let sH = uiScaleDivHeight();
-                    push();
-                    fill(255);
-                    noStroke();
-                    textAlign(CENTER,CENTER);
-                    textSize(width/this.fontSize);
-                    text(this.t,sW*this.pos.x,sH*this.pos.y);
-                    pop();
-                }
-            }
-
-            class UIPanel
-            {
-                constructor(x,y,w,h,elements=[])
-                {
-                    this.elements = elements;
-                    this.pos = createVector(x,y);
-                    this.size = createVector(w,h);
-                }
-
-                draw()
-                {
-                    let sW = uiScaleDivWidth();
-                    let sH = uiScaleDivHeight();
-                    push();
-                    fill(0);
-                    stroke(50);
-                    strokeWeight(10)
-                    rect(sW*this.pos.x,sH*this.pos.y,sW*this.size.x,sH*this.size.y,10);
-                    pop();
-                    for (let element of this.elements)
-                    {
-                        element.draw();
-                    }
-                }
-            }
-
-            function Title(event=true)
+            function TitleScreen(event=true)
             {
                 push();
                 fill(255);
@@ -101,94 +37,10 @@
                 }
             }
 
-            class UI
-            {
-                constructor(title="Kitten Tower Defense")
-                {
-                    this.title = title;
-                    this.infoText = new UIText(__UISCALE__/2,5,this.title + " Version: " + __VERSION__ + " Developed By: " + __AUTHOR__,35);
-                    this.infoPanel = new UIPanel(0,0,__UISCALE__,10,[this.infoText]);
-                }
-
-                drawGameUI()
-                {
-                    this.infoPanel.draw();
-                    push();
-                    fill(255);
-                    noStroke();
-                    textAlign(CENTER,CENTER);
-                    textSize(width/35)
-                    frameAverage += 1/(deltaTime*0.001);
-                    text(Math.round(frameAverage/frameCount),width/2,height/2);
-                    pop();
-                    
-                }
-            }
-
-            const GRASS = 0;
-            const PATH = 1;
-
-            const tileFill = [[50,150,75],("#705535")]
-
-            function drawTile(type,x,y,r)
-            {
-                x += 0.5;
-                y += 0.5;
-                push();
-                stroke(0);
-                fill(tileFill[type]);
-                rectMode(CENTER);
-                rect(width/2 + r*x, height/2+r*y,r,r);
-                pop();
-            }
-
-            class Level1
-            {
-                constructor(coins=0)
-                {
-                    this.coins = coins;
-                    this.round = 0;
-                    this.mapArray = [
-                        [0,0,0,0,0,0,0,0,0,0],
-                        [0,0,0,1,1,1,0,0,0,0],
-                        [0,0,0,1,0,1,0,0,0,0],
-                        [1,1,1,1,0,1,0,0,0,0],
-                        [0,0,0,0,0,1,0,0,0,0],
-                        [0,0,0,1,1,1,0,0,0,0],
-                        [0,0,0,1,0,0,0,0,0,0],
-                        [0,0,0,1,0,0,0,0,0,0],
-                        [0,0,0,1,1,1,1,1,1,1],
-                        [0,0,0,0,0,0,0,0,0,0]
-                    ];
-                }
-
-                draw(mouseClick=true,ui=null)
-                {
-                    if (mouseClick) {return;}
-                    background(0);
-                    // Size For Tiles (Always Sqaure)
-                    let r = ((width+height)/2)/__MAPSIZE__/2;
-                    for (let x = -__MAPSIZE__/2; x<__MAPSIZE__/2; x++)
-                    {
-                        for (let y=-__MAPSIZE__/2; y<__MAPSIZE__/2; y++)
-                        {
-                            drawTile(this.mapArray[y+5][x+5],x,y,r);
-                        }
-                    }
-                    ui.drawGameUI();
-                }
-            }
-
             let Level = 1;
-
-            function GameDraw(mouseClick=true,ui=null)
-            {
-                if (Level==1){LVL1.draw(mouseClick,ui);}
-            }
-
             let LVL1 = new Level1();
             let ui;
-            loadOrder = [Title,GameDraw,function(e){}];
+            loadOrder = [TitleScreen,GameDraw,function(e){}];
             
             function setup()
             {
@@ -197,7 +49,7 @@
                 CANVAS.mouseClicked(function(){
                     loadOrder[STATE]();
                 });
-                changeState(0);
+                STATE = 0;
             }
 
             function draw()
@@ -206,6 +58,7 @@
                 loadOrder[STATE](false,ui);
             }
 
+            // For resizing canvas
             function windowResized()
             {
                 resizeCanvas(windowWidth,windowHeight);
