@@ -10,6 +10,8 @@
             const __AUTHOR__ = "Zycras";
             const __MAPSIZE__ = 10;
             const __UISCALE__ = 100;
+            let frameAverage = 0;
+            
 
             function uiScaleDivWidth()
             {
@@ -116,7 +118,9 @@
                     noStroke();
                     textAlign(CENTER,CENTER);
                     textSize(width/35)
-                    text(deltaTime/1,width/2,height/2);
+                    frameAverage += deltaTime/1;
+                    frameAverage /= 2;
+                    text(frameAverage,width/2,height/2);
                     pop();
                     
                 }
